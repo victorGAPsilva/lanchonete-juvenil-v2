@@ -52,5 +52,13 @@ Evidências em `docs/screenshots/`: `desktop-demo.jpg`, `mobile-review.jpg` e `p
 - Não houve envio de mensagem nem pedido fictício à lanchonete. O link e a codificação foram verificados automaticamente; a cópia foi verificada no navegador. A abertura do aplicativo externo do WhatsApp e a confirmação humana da lanchonete não foram simuladas como sucesso.
 - Não foi usado celular físico, Safari/iOS ou Android real. A conferência móvel foi de layout e interação no navegador em documento de 390 px.
 - Docker, proxy HTTPS e publicação em domínio externo estão documentados, mas não foram executados neste ambiente. A aplicação foi entregue localmente.
-- A logo original não constava dos anexos. A marca e o laranja são provisórios, com upload da logo disponível no painel. O tom exato depende do arquivo original.
+- A logo foi fornecida após a entrega inicial e integrada em `public/assets/logo-juvenil.jpg`, sem redesenho nem alteração do arquivo. O tom predominante do JPEG é `#fc6202`. Cardápio, painel e favicon usam o arquivo original por padrão; imagens personalizadas continuam configuráveis. As capturas da entrega inicial registram a marca provisória; `docs/screenshots/logo-integrated.jpg` mostra a atualização.
 - O responsável ainda precisa criar o administrador de produção e informar produtos, preços, endereço, bairros, taxas, pagamentos e horários antes de abrir a loja.
+
+## Integração da logo fornecida
+
+- Arquivo original copiado sem transformação; SHA-256 da cópia confere com o anexo.
+- Cor predominante medida nos pixels laranja do JPEG: RGB (252, 98, 2), `#fc6202`.
+- Contraste de texto nos botões laranja: 5,74:1; texto laranja escuro em branco: 5,61:1.
+- Logo carregada no cardápio e no login administrativo, conferidos no navegador. Captura da atualização em viewport de 319 px em `docs/screenshots/logo-integrated.jpg`.
+- Sintaxe dos módulos alterados e `git diff --check` verificados.

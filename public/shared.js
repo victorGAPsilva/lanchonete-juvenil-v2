@@ -1,4 +1,13 @@
 export const $ = (s, root = document) => root.querySelector(s);
+export const DEFAULT_LOGO = "/assets/logo-juvenil.jpg";
+export function renderLogo(url, name = "Lanchonete Juvenil") {
+  const img = document.createElement("img");
+  img.src = url || DEFAULT_LOGO;
+  img.alt = `Logo ${name}`;
+  img.width = 56;
+  img.height = 56;
+  $("#brand-logo").replaceChildren(img);
+}
 export const esc = (v) =>
   String(v ?? "").replace(
     /[&<>"']/g,

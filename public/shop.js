@@ -1,4 +1,13 @@
-import { $, esc, money, api, json, toast, cents } from "./shared.js";
+import {
+  $,
+  esc,
+  money,
+  api,
+  json,
+  toast,
+  cents,
+  renderLogo,
+} from "./shared.js";
 let data,
   category = "all",
   cart = [],
@@ -51,10 +60,7 @@ function render() {
   if (!data.categories.some((c) => c.id === category)) category = "all";
   $("#status").textContent = data.open ? "Aberto agora" : "Fechado agora";
   $("#status").classList.toggle("open", data.open);
-  $("#brand-logo").classList.toggle("custom-logo", !!c.logo);
-  $("#brand-logo").innerHTML = c.logo
-    ? `<img src="${esc(c.logo)}" alt="Logo ${esc(c.name)}">`
-    : "J<span>•</span>";
+  renderLogo(c.logo, c.name);
   $("#address").textContent = c.address || "Endereço ainda não informado.";
   $("#social").hidden = !c.instagram;
   if (c.instagram) {
