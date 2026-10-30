@@ -1,0 +1,42 @@
+name: Verificação da aplicação
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Validar configuração de produção
+        run: docker compose --env-file .env.production.example -f compose.production.yaml config --quiet
+      - name: Construir imagem
+        run: docker build --pull -t juvenil:test .
+      - name: Validar configuração HTTPS do Caddy
+        run: docker run --rm -e DOMAIN=juvenil.example -v "$PWD/deploy/Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+      - name: Verificar inicialização, saúde e backup no contêiner
+        shell: bash
+        run: |
+          set -euo pipefail
+          trap 'docker logs juvenil-ci; docker rm -f juvenil-ci' EXIT
+          docker run -d --name juvenil-ci -p 127.0.0.1:3000:3000 -e PUBLIC_ORIGIN=https://juvenil.example juvenil:test
+          ready=false
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:3000/api/health; then ready=true; break; fi
+            sleep 1
+          done
+          test "$ready" = true
+          docker exec juvenil-ci node scripts/backup.js

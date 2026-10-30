@@ -1,7 +1,8 @@
 node_modules
 .git
-.env
+.env*
 data*
 uploads*
 backups
 test-results
+dist

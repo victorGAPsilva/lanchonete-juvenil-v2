@@ -1,6 +1,6 @@
 {
   "name": "lanchonete-juvenil",
-  "version": "1.0.0",
+  "version": "1.1.0-rc.1",
   "private": true,
   "type": "module",
   "engines": {
@@ -13,6 +13,9 @@
     "demo": "node scripts/demo.js",
     "seed:examples": "node --env-file-if-exists=.env scripts/seed-examples.js",
     "backup": "node --env-file-if-exists=.env scripts/backup.js",
+    "preflight": "node --env-file-if-exists=.env scripts/preflight.js",
+    "preflight:live": "node --env-file-if-exists=.env scripts/preflight.js --live",
+    "check": "node scripts/check-syntax.js && npm test && npm audit --omit=dev && npm run preflight",
     "test": "node --test"
   },
   "dependencies": {

@@ -275,6 +275,25 @@ test("API: autorização, login, edição pública, upload, recálculo e persist
       (
         await request("/api/admin/settings", "PUT", {
           ...current,
+          payments: [null],
+        })
+      ).status,
+      400,
+    );
+    assert.equal(
+      (
+        await request("/api/admin/products/p", "PUT", {
+          ...product,
+          groups: [null],
+        })
+      ).status,
+      400,
+    );
+    assert.equal((await request("/api/quote", "POST", [])).status, 400);
+    assert.equal(
+      (
+        await request("/api/admin/settings", "PUT", {
+          ...current,
           ...config,
           hours: current.hours,
         })

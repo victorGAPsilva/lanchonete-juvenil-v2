@@ -72,3 +72,11 @@ Evidências em `docs/screenshots/`: `desktop-demo.jpg`, `mobile-review.jpg` e `p
 - Pausa verificada: após mais de cinco segundos, o slide continuou na posição 2/3 com o controle Reproduzir disponível. O layout móvel não teve rolagem horizontal (largura útil 304 px, largura de conteúdo 304 px).
 - Capturas: `docs/screenshots/carousel-mobile.jpg` e `docs/screenshots/carousel-desktop.jpg`.
 - O servidor local foi reiniciado para carregar as validações atualizadas; contas e configurações existentes foram mantidas.
+
+## Pré-hospedagem v1.1.0-rc.1
+
+- `npm run check` aprovado: sintaxe de 20 módulos, 13 testes, auditoria sem vulnerabilidades e preflight técnico.
+- Novos testes verificam exigência de HTTPS/cookie Secure, limites da confiança no proxy, diagnóstico de dados comerciais, endpoint de saúde, bloqueio de produtos fictícios em produção e leitura do banco/imagens a partir de backup.
+- Configurações e produtos locais foram preservados. O preflight indicou exemplos ativos e falta de bairros para a entrega habilitada.
+- Preparados Compose de produção, proxy Caddy, volumes persistentes e instruções específicas para Hostinger VPS. O contêiner usa usuário não privilegiado e tem diretório de backup gravável.
+- Docker não está instalado neste computador; execução do contêiner, validação nativa do Compose e validação do Caddy foram incluídas na automação de Linux. A configuração de DNS/HTTPS e a publicação real dependem do VPS/domínio, ainda não fornecidos.

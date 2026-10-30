@@ -2,6 +2,8 @@
 
 Cardápio, sacola persistente no navegador, revisão no servidor, WhatsApp e painel administrativo. Interface em português com foco em celular. Node.js 24, Express e SQLite: um único processo, sem serviço de banco adicional e com backup simples. JavaScript e CSS sem framework ou compilação no cliente. Imagens locais convertidas para WebP com Sharp.
 
+**Pré-hospedagem: v1.1.0-rc.1.** Para Hostinger VPS, use [deploy/HOSTINGER.md](deploy/HOSTINGER.md) e `compose.production.yaml`. As notas e os limites da verificação estão em [RELEASE.md](RELEASE.md). O `compose.yaml` serve para teste local, não substitui a configuração de produção.
+
 ## Instalação
 
 Requer Node.js 24 e npm. No diretório do projeto:
@@ -43,7 +45,7 @@ O carrossel no topo mostra produtos ativos com imagem, em categorias ativas, exc
 npm run demo
 ```
 
-Abre em http://localhost:3001, usando exclusivamente `data-demo/` e `uploads-demo/`. Todos os produtos, preços, endereço e prazos são explicitamente fictícios. O console informa um login de demonstração com senha aleatória nova a cada execução. O botão WhatsApp usa o número configurado no exemplo: teste apenas revisão e cópia; não envie pedidos fictícios à lanchonete. A produção em :3000 permanece vazia e fechada.
+Abre em http://localhost:3001, usando exclusivamente `data-demo/` e `uploads-demo/`. Todos os produtos, preços, endereço e prazos são explicitamente fictícios. O console informa um login de demonstração com senha aleatória nova a cada execução. O botão WhatsApp usa o número configurado no exemplo: teste apenas revisão e cópia; não envie pedidos fictícios à lanchonete. O banco da porta 3000 não é alterado por esse comando.
 
 ## Pedidos e privacidade
 
@@ -55,22 +57,9 @@ A sacola permanece após abrir WhatsApp e após atualizar a página. Nome e ende
 
 Esta aplicação usa um processo Node.js com SQLite em disco. Não pode ser publicada como arquivos estáticos nem no runtime Workers do Sites sem adaptação de banco, uploads e servidor. O projeto inclui Docker para um servidor com armazenamento persistente. **Não foi publicado externamente nesta entrega.**
 
-Em um servidor Linux com Docker Compose e um domínio apontando para ele:
+Siga `deploy/HOSTINGER.md` para validar o domínio, iniciar o Compose de produção, criar o administrador e conferir o site antes de abrir a loja.
 
-1. Copie o código, crie `.env` com `PUBLIC_ORIGIN=https://seu-dominio.com` e `COOKIE_SECURE=true`.
-2. Execute `docker compose up -d --build`.
-3. Execute `docker compose exec juvenil node scripts/create-admin.js` para criar a conta nesse banco (a conta local não é transferida automaticamente).
-4. Coloque um proxy HTTPS à frente de `127.0.0.1:3000`. Por exemplo, um Caddy instalado no host com este Caddyfile:
-
-```text
-seu-dominio.com {
-    reverse_proxy 127.0.0.1:3000
-}
-```
-
-5. Abra o domínio, faça login e configure a loja. O domínio HTTPS deve corresponder exatamente a `PUBLIC_ORIGIN`, incluindo ausência/presença de porta. Cookies seguros exigem HTTPS. Não exponha :3000 diretamente. O Compose publica somente no loopback.
-
-Para atualizar: `docker compose up -d --build`. Os volumes preservam banco e fotos. Não use múltiplas réplicas nem discos efêmeros para este SQLite. As senhas usam scrypt com salt individual; sessões aleatórias têm hash no banco, expiram em oito horas e usam cookie HttpOnly/SameSite=Strict. Todas as rotas administrativas exigem autenticação; mutações rejeitam origens diferentes. O login limita tentativas por IP em memória. Atrás de proxy, o limite é conservador e compartilhado pelo IP do proxy. Reiniciar limpa os contadores. Para escala maior, use controle de taxa persistente no proxy.
+Os volumes preservam banco e fotos. Não use múltiplas réplicas nem discos efêmeros para este SQLite. As senhas usam scrypt com salt individual; sessões aleatórias têm hash no banco, expiram em oito horas e usam cookie HttpOnly/SameSite=Strict. Em produção, Secure é obrigatório e uma origem HTTPS deve estar configurada. O limite de login considera o IP do cliente quando há exatamente um proxy confiável (`TRUST_PROXY_HOPS=1`, como no Compose de produção); acesso direto usa `0`. Reiniciar limpa os contadores em memória. Para escala maior, use controle persistente no proxy.
 
 Uploads exigem login, têm limite de 5 MB e 25 milhões de pixels, aceitam somente JPEG/PNG/WebP decodificados, removem metadados pela recodificação e recebem nomes aleatórios. A pasta de uploads é pública: use somente imagens destinadas ao cardápio. Imagens substituídas ficam no disco para não quebrar sacolas e caches antigos; remova arquivos sem uso somente após backup e conferência.
 
@@ -91,7 +80,11 @@ Para restaurar, pare o aplicativo, preserve uma cópia do estado atual e substit
 ```text
 npm test
 npm audit
+npm run preflight
+npm run preflight:live
 ```
+
+`npm run check` agrupa sintaxe, testes, auditoria e preflight técnico. `preflight:live` exige ambiente de produção e dados comerciais prontos, e sai com erro enquanto houver pendências. O endpoint `/api/health` informa a saúde do processo/banco e a versão, sem expor cadastros.
 
 Os testes usam diretório temporário isolado e verificam centavos, promoções, adicionais, limites, quantidade, disponibilidade, entrega fixa/por bairro/pendente, retirada, pagamento, troco, horários e madrugada em São Paulo, mensagem codificada do WhatsApp, hash, proteção de todas as rotas administrativas, login/logout, bloqueio de origem, uploads, atualização pública e leitura dos dados por novo processo após fechar o banco.
 

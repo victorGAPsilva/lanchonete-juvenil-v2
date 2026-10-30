@@ -5,15 +5,19 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
     environment:
+      NODE_ENV: development
       HOST: 0.0.0.0
       PORT: 3000
       DATA_DIR: /app/data
       UPLOAD_DIR: /app/uploads
+      BACKUP_DIR: /app/backups
       PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:3000}
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
     volumes:
       - juvenil-data:/app/data
       - juvenil-uploads:/app/uploads
+      - juvenil-backups:/app/backups
 volumes:
   juvenil-data:
   juvenil-uploads:
+  juvenil-backups:

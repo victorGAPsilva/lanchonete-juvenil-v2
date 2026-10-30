@@ -15,10 +15,12 @@ import {
   checkout,
 } from "./lib/domain.js";
 import { category, product, settings } from "./lib/validation.js";
+import { runtime } from "./lib/runtime.js";
+import pkg from "./package.json" with { type: "json" };
 export const app = express();
 app.disable("x-powered-by");
-app.set("trust proxy", false);
-const uploadDir = resolve(process.env.UPLOAD_DIR || "uploads");
+app.set("trust proxy", runtime.proxyHops || false);
+const uploadDir = runtime.uploadDir;
 mkdirSync(uploadDir, { recursive: true });
 app.use((req, res, next) => {
   res.set({
@@ -28,24 +30,34 @@ app.use((req, res, next) => {
     "Content-Security-Policy":
       "default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
   });
+  if (runtime.production)
+    res.set("Strict-Transport-Security", "max-age=31536000");
   if (req.path.startsWith("/api")) res.set("Cache-Control", "no-store");
   if (!["GET", "HEAD", "OPTIONS"].includes(req.method)) {
     const origin = req.get("origin");
-    if (
-      origin &&
-      origin !==
-        (process.env.PUBLIC_ORIGIN ||
-          `http://localhost:${process.env.PORT || 3000}`)
-    )
+    if (origin && origin !== runtime.origin)
       return res.status(403).json({ error: "Origem não autorizada." });
   }
   next();
 });
 app.use(express.json({ limit: "256kb" }));
+app.use("/api", (req, res, next) => {
+  if (
+    ["POST", "PUT", "PATCH"].includes(req.method) &&
+    req.is("application/json")
+  ) {
+    check(
+      req.body && typeof req.body === "object" && !Array.isArray(req.body),
+      "Envie um objeto JSON válido.",
+    );
+  }
+  next();
+});
 const counts = new Map();
 function limit(req, res, next) {
-  const key = req.socket.remoteAddress,
+  const key = req.ip,
     now = Date.now();
+  for (const [ip, entry] of counts) if (entry.until < now) counts.delete(ip);
   let r = counts.get(key);
   if (!r || r.until < now) {
     r = { n: 0, until: now + 15 * 60000 };
@@ -57,6 +69,14 @@ function limit(req, res, next) {
       .json({ error: "Muitas tentativas. Aguarde 15 minutos." });
   next();
 }
+app.get("/api/health", (req, res) => {
+  try {
+    db.prepare("SELECT 1").get();
+    res.json({ status: "ok", version: pkg.version });
+  } catch {
+    res.status(503).json({ status: "unavailable" });
+  }
+});
 const dummyHash = hashPassword(randomBytes(32).toString("hex"));
 function auth(req, res, next) {
   const token = /(?:^|; )juvenil=([a-f0-9]+)/.exec(
@@ -84,9 +104,19 @@ app.get("/api/menu", (req, res) => {
 app.post("/api/quote", (req, res) =>
   res.json(quote(req.body.cart, rows("products"), rows("categories"))),
 );
-app.post("/api/checkout", (req, res) =>
-  res.json(checkout(req.body, rows("products"), rows("categories"), config())),
-);
+app.post("/api/checkout", (req, res) => {
+  const result = checkout(
+    req.body,
+    rows("products"),
+    rows("categories"),
+    config(),
+  );
+  check(
+    !runtime.production || !result.lines.some((line) => line.demo),
+    "Os produtos fictícios são apenas de demonstração. Escolha produtos reais para continuar.",
+  );
+  res.json(result);
+});
 app.post("/api/admin/login", limit, (req, res) => {
   const { email, password } = req.body;
   check(
@@ -111,7 +141,7 @@ app.post("/api/admin/login", limit, (req, res) => {
   res
     .cookie("juvenil", token, {
       httpOnly: true,
-      secure: process.env.COOKIE_SECURE === "true",
+      secure: runtime.cookieSecure,
       sameSite: "strict",
       maxAge: 8 * 3600000,
       path: "/",
@@ -125,7 +155,14 @@ app.post("/api/admin/logout", (req, res) => {
   )?.[1];
   if (token)
     db.prepare("DELETE FROM sessions WHERE token=?").run(digest(token));
-  res.clearCookie("juvenil", { path: "/" }).json({ ok: true });
+  res
+    .clearCookie("juvenil", {
+      path: "/",
+      httpOnly: true,
+      secure: runtime.cookieSecure,
+      sameSite: "strict",
+    })
+    .json({ ok: true });
 });
 app.get("/api/admin/data", (req, res) =>
   res.json({
@@ -223,12 +260,24 @@ app.use((err, req, res, next) => {
 if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(resolve(process.argv[1])).href
-)
-  app.listen(
-    Number(process.env.PORT || 3000),
-    process.env.HOST || "127.0.0.1",
-    () =>
-      console.log(
-        `Lanchonete Juvenil: http://localhost:${process.env.PORT || 3000}`,
-      ),
+) {
+  const server = app.listen(runtime.port, runtime.host, () =>
+    console.log(`Lanchonete Juvenil: ${runtime.origin}`),
   );
+  server.requestTimeout = 60000;
+  server.headersTimeout = 15000;
+  let stopping = false;
+  for (const signal of ["SIGTERM", "SIGINT"])
+    process.on(signal, () => {
+      if (stopping) return;
+      stopping = true;
+      server.close(() => {
+        db.close();
+        process.exit(0);
+      });
+      setTimeout(() => {
+        server.closeAllConnections();
+        process.exit(1);
+      }, 10000).unref();
+    });
+}
