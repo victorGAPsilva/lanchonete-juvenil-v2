@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#ed701b" />
+    <meta
+      name="description"
+      content="Cardápio digital da Lanchonete Juvenil. Escolha seus produtos e combine seu pedido pelo WhatsApp."
+    />
+    <title>Lanchonete Juvenil • Cardápio</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/shop.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#menu">Ir para o cardápio</a>
+    <header>
+      <div class="wrap top">
+        <a class="brand" href="/"
+          ><span class="brand-icon" id="brand-logo">J<span>•</span></span
+          ><span>Lanchonete<br /><strong>Juvenil</strong></span></a
+        >
+        <div class="header-right">
+          <span class="status" id="status">Carregando…</span
+          ><button id="cart-top" class="cart-button">
+            Sacola <span id="count">0</span>
+          </button>
+        </div>
+      </div>
+    </header>
+    <main class="wrap">
+      <section class="intro">
+        <div>
+          <p class="eyebrow">FEITO PARA O SEU MOMENTO</p>
+          <h1>Uma pausa.<br /><em>Um bom lanche.</em></h1>
+          <p>Escolha por aqui. Combine pelo WhatsApp.</p>
+        </div>
+        <div class="intro-note">
+          <span class="sun">✳</span>
+          <p>Seu próximo lanche<br />começa aqui.</p>
+          <span class="small">Lanchonete Juvenil</span>
+        </div>
+      </section>
+      <div class="service-info" id="service-info"></div>
+      <section id="menu">
+        <div class="menu-heading">
+          <div>
+            <p class="eyebrow">ESCOLHA DO SEU JEITO</p>
+            <h2>Nosso cardápio</h2>
+          </div>
+          <label class="search"
+            ><span aria-hidden="true">⌕</span
+            ><input
+              id="search"
+              type="search"
+              placeholder="O que vai ser hoje?"
+              aria-label="Buscar no cardápio"
+          /></label>
+        </div>
+        <nav class="categories" id="categories" aria-label="Categorias"></nav>
+        <div id="products" class="products">
+          <p class="empty">Carregando o cardápio…</p>
+        </div>
+      </section>
+      <section class="how">
+        <div>
+          <span>01</span>
+          <h3>Escolha seu lanche</h3>
+          <p>Confira o cardápio e personalize.</p>
+        </div>
+        <div>
+          <span>02</span>
+          <h3>Revise sua sacola</h3>
+          <p>Escolha entrega ou retirada.</p>
+        </div>
+        <div>
+          <span>03</span>
+          <h3>Continue no WhatsApp</h3>
+          <p>Envie a mensagem e aguarde a confirmação.</p>
+        </div>
+      </section>
+    </main>
+    <footer class="wrap">
+      <div>
+        <strong>Lanchonete Juvenil</strong>
+        <p id="address">Endereço ainda não informado.</p>
+      </div>
+      <div>
+        <a id="social" hidden>Instagram</a
+        ><a href="/admin">Área administrativa ↗</a>
+      </div>
+    </footer>
+    <button class="floating-cart" id="cart-bottom">
+      Ver minha sacola <span id="cart-summary">0 itens</span>
+    </button>
+    <dialog id="product-dialog" aria-labelledby="product-title"></dialog>
+    <dialog id="cart-dialog" aria-label="Sua sacola"></dialog>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

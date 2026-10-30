@@ -1,0 +1,22 @@
+{
+  "name": "lanchonete-juvenil",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "dev": "node --watch --env-file-if-exists=.env server.js",
+    "admin:create": "node --env-file-if-exists=.env scripts/create-admin.js",
+    "demo": "node scripts/demo.js",
+    "backup": "node --env-file-if-exists=.env scripts/backup.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "multer": "^2.0.2",
+    "sharp": "^0.35.5"
+  }
+}
