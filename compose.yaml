@@ -1,0 +1,19 @@
+services:
+  juvenil:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+      DATA_DIR: /app/data
+      UPLOAD_DIR: /app/uploads
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-http://localhost:3000}
+      COOKIE_SECURE: ${COOKIE_SECURE:-false}
+    volumes:
+      - juvenil-data:/app/data
+      - juvenil-uploads:/app/uploads
+volumes:
+  juvenil-data:
+  juvenil-uploads:
