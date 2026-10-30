@@ -144,6 +144,7 @@ function editProduct(
     categoryId: data.categories[0]?.id || "",
     active: true,
     featured: false,
+    demo: false,
     soldOut: false,
     order: data.products.length,
     image: "",
@@ -153,7 +154,7 @@ function editProduct(
   const d = $("#editor");
   let image = item.image,
     groups = structuredClone(item.groups);
-  d.innerHTML = `<button class="close" data-close aria-label="Fechar">×</button><h2>Produto</h2><form id="product-form"><div class="admin-grid">${field("Nome", "name", item.name, "text", 'required maxlength="100"')}<label class="field">Categoria<select name="categoryId" required><option value="">Selecione</option>${data.categories.map((c) => `<option value="${esc(c.id)}" ${selected(c.id, item.categoryId)}>${esc(c.name)}</option>`).join("")}</select></label></div><label class="field">Descrição<textarea name="description" maxlength="1000">${esc(item.description)}</textarea></label><div class="admin-grid">${field("Preço (R$)", "price", (item.price / 100).toFixed(2), "number", 'required min="0" max="100000" step="0.01"')}${field("Preço promocional (R$, opcional)", "promo", item.promoPrice === null ? "" : (item.promoPrice / 100).toFixed(2), "number", 'min="0" max="100000" step="0.01"')}</div>${field("Ordem de exibição", "order", item.order, "number", 'required step="1"')}<label class="field">Foto (JPG, PNG ou WebP, até 5 MB)<input name="image" type="file" accept="image/jpeg,image/png,image/webp"></label><div id="image-preview">${image ? `<img class="preview-image" src="${esc(image)}" alt="Foto atual">` : ""}</div><button type="button" id="remove-image">Remover foto</button><div class="actions">${checkbox("Ativo", "active", item.active)}${checkbox("Esgotado", "soldOut", item.soldOut)}${checkbox("Destaque", "featured", item.featured)}</div><fieldset><legend>Opções e adicionais</legend><p class="small">Use mínimo 1 para tornar um grupo obrigatório. Cada opção pode ser escolhida uma vez por unidade do produto.</p><div id="groups"></div><button id="add-group" type="button">+ Grupo de opções</button></fieldset><p id="edit-error" class="error" role="alert"></p><button class="primary wide" id="save-product">Salvar produto</button></form>`;
+  d.innerHTML = `<button class="close" data-close aria-label="Fechar">×</button><h2>Produto</h2><form id="product-form"><div class="admin-grid">${field("Nome", "name", item.name, "text", 'required maxlength="100"')}<label class="field">Categoria<select name="categoryId" required><option value="">Selecione</option>${data.categories.map((c) => `<option value="${esc(c.id)}" ${selected(c.id, item.categoryId)}>${esc(c.name)}</option>`).join("")}</select></label></div><label class="field">Descrição<textarea name="description" maxlength="1000">${esc(item.description)}</textarea></label><div class="admin-grid">${field("Preço (R$)", "price", (item.price / 100).toFixed(2), "number", 'required min="0" max="100000" step="0.01"')}${field("Preço promocional (R$, opcional)", "promo", item.promoPrice === null ? "" : (item.promoPrice / 100).toFixed(2), "number", 'min="0" max="100000" step="0.01"')}</div>${field("Ordem de exibição", "order", item.order, "number", 'required step="1"')}<label class="field">Foto (JPG, PNG ou WebP, até 5 MB)<input name="image" type="file" accept="image/jpeg,image/png,image/webp"></label><div id="image-preview">${image ? `<img class="preview-image" src="${esc(image)}" alt="Foto atual">` : ""}</div><button type="button" id="remove-image">Remover foto</button><div class="actions">${checkbox("Ativo", "active", item.active)}${checkbox("Esgotado", "soldOut", item.soldOut)}${checkbox("Destaque", "featured", item.featured)}${checkbox("Produto fictício (demonstração)", "demo", item.demo)}</div><fieldset><legend>Opções e adicionais</legend><p class="small">Use mínimo 1 para tornar um grupo obrigatório. Cada opção pode ser escolhida uma vez por unidade do produto.</p><div id="groups"></div><button id="add-group" type="button">+ Grupo de opções</button></fieldset><p id="edit-error" class="error" role="alert"></p><button class="primary wide" id="save-product">Salvar produto</button></form>`;
   const f = $("#product-form");
   $("#remove-image").onclick = () => {
     image = "";
@@ -234,6 +235,7 @@ function editProduct(
         order: Number(f.elements.order.value),
         active: f.elements.active.checked,
         featured: f.elements.featured.checked,
+        demo: f.elements.demo.checked,
         soldOut: f.elements.soldOut.checked,
         image,
         groups,

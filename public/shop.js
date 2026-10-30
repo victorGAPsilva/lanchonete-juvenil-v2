@@ -8,6 +8,7 @@ import {
   cents,
   renderLogo,
 } from "./shared.js";
+import { renderCarousel } from "./carousel.js";
 let data,
   category = "all",
   cart = [],
@@ -89,7 +90,12 @@ function render() {
     )
     .join("");
   renderProducts();
+  renderCarousel(data);
 }
+$("#product-carousel").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-carousel-product]");
+  if (button) openProduct(button.dataset.carouselProduct);
+});
 function renderProducts() {
   const term = $("#search").value.trim().toLocaleLowerCase("pt-BR");
   const ps = data.products.filter(
@@ -102,7 +108,7 @@ function renderProducts() {
     ? ps
         .map(
           (p) =>
-            `<article class="product ${p.soldOut ? "sold" : ""}"><div class="product-copy">${p.soldOut ? '<span class="badge">Esgotado</span>' : p.promoPrice !== null ? '<span class="badge">Em promoção</span>' : p.featured ? '<span class="badge">Destaque</span>' : ""}<h3>${esc(p.name)}</h3><p>${esc(p.description)}</p><span class="price">${p.promoPrice !== null ? `<del>${money(p.price)}</del>` : ""}${money(p.promoPrice ?? p.price)}</span></div>${p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="${esc(p.name)}">` : '<div class="placeholder" aria-label="Produto sem foto">⌑</div>'}<button class="add" data-product="${esc(p.id)}" ${p.soldOut ? "disabled" : ""} aria-label="Personalizar ${esc(p.name)}">+</button></article>`,
+            `<article class="product ${p.soldOut ? "sold" : ""}"><div class="product-copy">${p.demo ? `<span class="badge">Exemplo fictício</span> ` : ""}${p.soldOut ? '<span class="badge">Esgotado</span>' : p.promoPrice !== null ? '<span class="badge">Em promoção</span>' : p.featured ? '<span class="badge">Destaque</span>' : ""}<h3>${esc(p.name)}</h3><p>${esc(p.description)}</p><span class="price">${p.promoPrice !== null ? `<del>${money(p.price)}</del>` : ""}${money(p.promoPrice ?? p.price)}</span></div>${p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="${esc(p.name)}">` : '<div class="placeholder" aria-label="Produto sem foto">⌑</div>'}<button class="add" data-product="${esc(p.id)}" ${p.soldOut ? "disabled" : ""} aria-label="Personalizar ${esc(p.name)}">+</button></article>`,
         )
         .join("")
     : `<div class="empty"><strong>${term ? "Nenhum lanche por aqui." : "O cardápio está sendo preparado."}</strong>${term ? "Tente outro nome ou descrição." : "Em breve, os produtos estarão disponíveis neste espaço."}</div>`;

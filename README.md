@@ -29,6 +29,16 @@ A produção começa **fechada**, sem produtos, pagamentos, endereço, bairros, 
 
 ## Demonstração separada
 
+Para adicionar os três produtos fictícios com imagens ao banco usado pelo site atual:
+
+```text
+npm run seed:examples
+```
+
+O comando cadastra croissant de presunto e queijo, suco de laranja e hambúrguer clássico, com preços de exemplo. Não altera a abertura da loja, contas, endereço, taxas ou pagamentos, e não sobrescreve produtos já cadastrados. Executá-lo novamente preserva edições e desativações feitas pelo administrador. Os produtos têm a identificação **Exemplo fictício**, descrição de demonstração e imagens ilustrativas geradas por IA. Pelo editor de produto, é possível desativá-los ou marcar/desmarcar **Produto fictício (demonstração)**; só retire essa identificação depois de substituir conteúdo, foto e preço pelos dados reais.
+
+O carrossel no topo mostra produtos ativos com imagem, em categorias ativas, excluindo esgotados. Alterna a cada cinco segundos, possui anterior/próximo, indicadores, pausa, navegação por setas do teclado e gesto horizontal no celular. A reprodução pausa com o mouse sobre o carrossel, com foco de teclado dentro dele e ao ocultar a aba. Preferência por movimento reduzido inicia o carrossel pausado. O botão **Ver produto** abre a personalização do mesmo produto usado no cardápio. Sem imagens disponíveis, o carrossel fica oculto.
+
 ```text
 npm run demo
 ```

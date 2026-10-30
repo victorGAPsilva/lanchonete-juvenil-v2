@@ -35,17 +35,46 @@
       </div>
     </header>
     <main class="wrap">
-      <section class="intro">
-        <div>
-          <p class="eyebrow">FEITO PARA O SEU MOMENTO</p>
-          <h1>Uma pausa.<br /><em>Um bom lanche.</em></h1>
-          <p>Escolha por aqui. Combine pelo WhatsApp.</p>
+      <h1 class="sr-only">Cardápio da Lanchonete Juvenil</h1>
+      <section
+        id="product-carousel"
+        class="product-carousel"
+        role="region"
+        aria-roledescription="carrossel"
+        aria-label="Produtos do cardápio"
+        hidden
+      >
+        <div id="carousel-track"></div>
+        <div class="carousel-controls">
+          <div class="carousel-navigation">
+            <button
+              type="button"
+              id="carousel-prev"
+              aria-label="Produto anterior"
+            >
+              ←
+            </button>
+            <span id="carousel-position" class="small"></span>
+            <button
+              type="button"
+              id="carousel-next"
+              aria-label="Próximo produto"
+            >
+              →
+            </button>
+          </div>
+          <div
+            id="carousel-dots"
+            class="carousel-dots"
+            aria-label="Escolher produto"
+          ></div>
+          <button type="button" id="carousel-pause">Ⅱ Pausar</button>
         </div>
-        <div class="intro-note">
-          <span class="sun">✳</span>
-          <p>Seu próximo lanche<br />começa aqui.</p>
-          <span class="small">Lanchonete Juvenil</span>
-        </div>
+        <span
+          id="carousel-announcement"
+          class="sr-only"
+          aria-live="polite"
+        ></span>
       </section>
       <div class="service-info" id="service-info"></div>
       <section id="menu">

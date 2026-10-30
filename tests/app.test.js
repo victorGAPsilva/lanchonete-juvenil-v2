@@ -325,6 +325,36 @@ test("API: autorização, login, edição pública, upload, recálculo e persist
     const uploaded = await response.json();
     assert.match(uploaded.url, /\.webp$/);
     assert.equal((await request(uploaded.url)).status, 200);
+    const { seedExamples } = await import("../scripts/seed-examples.js");
+    const settingsBeforeSeed = (await (await request("/api/menu")).json())
+      .config;
+    assert.equal(seedExamples(), 3);
+    assert.equal(seedExamples(), 0);
+    const example = (await (await request("/api/menu")).json()).products.find(
+      (p) => p.id === "example-croissant",
+    );
+    assert.equal(example.demo, true);
+    assert.equal(
+      (
+        await request("/api/admin/products/example-croissant", "PUT", {
+          ...example,
+          active: false,
+          price: 1900,
+        })
+      ).status,
+      200,
+    );
+    assert.equal(seedExamples(), 0);
+    const seededAdmin = await (await request("/api/admin/data")).json();
+    assert.equal(
+      seededAdmin.products.find((p) => p.id === example.id).active,
+      false,
+    );
+    assert.equal(
+      seededAdmin.products.find((p) => p.id === example.id).price,
+      1900,
+    );
+    assert.deepEqual(seededAdmin.config, settingsBeforeSeed);
     assert.equal((await request("/api/admin/logout", "POST", {})).status, 200);
     assert.equal((await request("/api/admin/data")).status, 401);
     await new Promise((r) => server.close(r));

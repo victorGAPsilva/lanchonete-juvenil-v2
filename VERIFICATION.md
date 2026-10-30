@@ -62,3 +62,13 @@ Evidências em `docs/screenshots/`: `desktop-demo.jpg`, `mobile-review.jpg` e `p
 - Contraste de texto nos botões laranja: 5,74:1; texto laranja escuro em branco: 5,61:1.
 - Logo carregada no cardápio e no login administrativo, conferidos no navegador. Captura da atualização em viewport de 319 px em `docs/screenshots/logo-integrated.jpg`.
 - Sintaxe dos módulos alterados e `git diff --check` verificados.
+
+## Produtos fictícios e carrossel
+
+- Três produtos de exemplo cadastrados no banco local por solicitação do responsável: croissant de presunto e queijo, suco de laranja e hambúrguer clássico. Os exemplos usam identificação explícita no cardápio e no carrossel, preços fictícios e imagens geradas por IA, documentadas em `docs/PRODUCT-IMAGES.md`.
+- Imagens WebP locais de 900 px: aproximadamente 53 KB, 37 KB e 54 KB. Nenhuma imagem depende de URL externa.
+- `npm test`: 10 testes passaram. A integração foi ampliada para verificar que o cadastro dos exemplos não altera configurações existentes, não duplica registros e preserva edições e desativações do administrador. A API administrativa aceita as imagens locais dos exemplos e persiste a identificação de demonstração.
+- Navegador: carrossel conferido em 319 px e 1280 × 900. Avanço automático observado; anterior/próximo, seleção por indicadores e seta direita do teclado verificados. O botão Ver produto abriu a personalização do hambúrguer correto. Todas as imagens carregaram e apenas um slide ficou visível por vez.
+- Pausa verificada: após mais de cinco segundos, o slide continuou na posição 2/3 com o controle Reproduzir disponível. O layout móvel não teve rolagem horizontal (largura útil 304 px, largura de conteúdo 304 px).
+- Capturas: `docs/screenshots/carousel-mobile.jpg` e `docs/screenshots/carousel-desktop.jpg`.
+- O servidor local foi reiniciado para carregar as validações atualizadas; contas e configurações existentes foram mantidas.

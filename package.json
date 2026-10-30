@@ -11,6 +11,7 @@
     "dev": "node --watch --env-file-if-exists=.env server.js",
     "admin:create": "node --env-file-if-exists=.env scripts/create-admin.js",
     "demo": "node scripts/demo.js",
+    "seed:examples": "node --env-file-if-exists=.env scripts/seed-examples.js",
     "backup": "node --env-file-if-exists=.env scripts/backup.js",
     "test": "node --test"
   },
