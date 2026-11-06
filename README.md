@@ -2,6 +2,8 @@
 
 Cardápio, sacola persistente no navegador, revisão no servidor, WhatsApp e painel administrativo. Interface em português com foco em celular. Node.js 24, Express e SQLite: um único processo, sem serviço de banco adicional e com backup simples. JavaScript e CSS sem framework ou compilação no cliente. Imagens locais convertidas para WebP com Sharp.
 
+O cardápio usa um visual retrô com títulos condensados, cores sólidas, faixas quadriculadas e produtos em linhas. A apresentação pública está em `public/storefront.css`, separado do estilo compartilhado com o painel. As fontes Anton e DM Sans são locais, com licenças em `public/assets/fonts/`. Veja a [verificação do redesenho](docs/REDESIGN.md) e as capturas em `docs/screenshots/redesign-*.jpg`.
+
 **Pré-hospedagem: v1.1.0-rc.1.** Para Hostinger VPS, use [deploy/HOSTINGER.md](deploy/HOSTINGER.md) e `compose.production.yaml`. As notas e os limites da verificação estão em [RELEASE.md](RELEASE.md). O `compose.yaml` serve para teste local, não substitui a configuração de produção.
 
 ## Instalação

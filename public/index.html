@@ -10,119 +10,194 @@
     />
     <title>Lanchonete Juvenil • Cardápio</title>
     <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/storefront.css" />
+    <link
+      rel="preload"
+      href="/assets/fonts/Anton-Regular.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
     <link rel="icon" type="image/jpeg" href="/assets/logo-juvenil.jpg" />
     <script type="module" src="/shop.js"></script>
   </head>
-  <body>
+  <body class="shop-body">
     <a class="skip" href="#menu">Ir para o cardápio</a>
-    <header>
+    <header class="shop-header">
       <div class="wrap top">
-        <a class="brand" href="/"
-          ><span class="brand-icon" id="brand-logo"
-            ><img
+        <a class="brand" href="/">
+          <span class="brand-icon" id="brand-logo">
+            <img
               src="/assets/logo-juvenil.jpg"
               alt="Logo Lanchonete Juvenil"
               width="56"
-              height="56" /></span
-          ><span>Lanchonete<br /><strong>Juvenil</strong></span></a
-        >
+              height="56"
+            />
+          </span>
+          <span>Lanchonete<br /><strong>Juvenil</strong></span>
+        </a>
+        <nav class="header-nav" aria-label="Navegação principal">
+          <a href="#menu">Cardápio</a>
+          <a href="#como-pedir">Como pedir</a>
+        </nav>
         <div class="header-right">
-          <span class="status" id="status">Carregando…</span
-          ><button id="cart-top" class="cart-button">
-            Sacola <span id="count">0</span>
+          <span class="status" id="status">Carregando…</span>
+          <button id="cart-top" class="cart-button">
+            Minha sacola <span id="count">0</span>
           </button>
         </div>
       </div>
     </header>
-    <main class="wrap">
-      <h1 class="sr-only">Cardápio da Lanchonete Juvenil</h1>
-      <section
-        id="product-carousel"
-        class="product-carousel"
-        role="region"
-        aria-roledescription="carrossel"
-        aria-label="Produtos do cardápio"
-        hidden
-      >
-        <div id="carousel-track"></div>
-        <div class="carousel-controls">
-          <div class="carousel-navigation">
-            <button
-              type="button"
-              id="carousel-prev"
-              aria-label="Produto anterior"
-            >
-              ←
-            </button>
-            <span id="carousel-position" class="small"></span>
-            <button
-              type="button"
-              id="carousel-next"
-              aria-label="Próximo produto"
-            >
-              →
-            </button>
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="wrap hero-layout">
+          <div class="hero-copy">
+            <p class="eyebrow">
+              <span aria-hidden="true">✳</span> DÊ UMA PAUSA. PEÇA UM JUVENIL.
+            </p>
+            <h1 id="hero-title">BATEU<br />A <span>FOME?</span></h1>
+            <p class="hero-description">
+              Seu próximo lanche favorito está aqui.<br />Escolha, monte do seu
+              jeito e aproveite.
+            </p>
+            <a class="button-link hero-cta" href="#menu">
+              Escolher meu lanche <span aria-hidden="true">↗</span>
+            </a>
+            <div class="hero-note">
+              <span aria-hidden="true">↳</span> Do cardápio direto para o seu WhatsApp.
+            </div>
           </div>
-          <div
-            id="carousel-dots"
-            class="carousel-dots"
-            aria-label="Escolher produto"
-          ></div>
-          <button type="button" id="carousel-pause">Ⅱ Pausar</button>
+          <div class="hero-visual">
+            <div class="hero-stamp" aria-hidden="true">
+              VAI DE<br /><strong>JUVENIL!</strong><span>✦ ✦ ✦</span>
+            </div>
+            <div class="hero-empty">
+              <span aria-hidden="true">✳</span>
+              <p>UMA PAUSA.<br />UM LANCHE.<br /><em>SEU MOMENTO.</em></p>
+              <span>CONHEÇA O NOSSO CARDÁPIO</span>
+            </div>
+            <section
+              id="product-carousel"
+              class="product-carousel"
+              role="region"
+              aria-roledescription="carrossel"
+              aria-label="Produtos do cardápio"
+              hidden
+            >
+              <div id="carousel-track"></div>
+              <div class="carousel-controls">
+                <div class="carousel-navigation">
+                  <button
+                    type="button"
+                    id="carousel-prev"
+                    aria-label="Produto anterior"
+                  >
+                    ←
+                  </button>
+                  <span id="carousel-position" class="small"></span>
+                  <button
+                    type="button"
+                    id="carousel-next"
+                    aria-label="Próximo produto"
+                  >
+                    →
+                  </button>
+                </div>
+                <div
+                  id="carousel-dots"
+                  class="carousel-dots"
+                  aria-label="Escolher produto"
+                ></div>
+                <button type="button" id="carousel-pause">Ⅱ Pausar</button>
+              </div>
+              <span
+                id="carousel-announcement"
+                class="sr-only"
+                aria-live="polite"
+              ></span>
+            </section>
+          </div>
         </div>
-        <span
-          id="carousel-announcement"
-          class="sr-only"
-          aria-live="polite"
-        ></span>
       </section>
-      <div class="service-info" id="service-info"></div>
-      <section id="menu">
+      <div class="checker" aria-hidden="true"></div>
+      <div class="service-band">
+        <div class="wrap service-info" id="service-info" aria-live="polite"></div>
+      </div>
+      <section id="menu" class="wrap menu-section" aria-labelledby="menu-title">
         <div class="menu-heading">
           <div>
-            <p class="eyebrow">ESCOLHA DO SEU JEITO</p>
-            <h2>Nosso cardápio</h2>
+            <p class="eyebrow">O MOMENTO DA BOA ESCOLHA</p>
+            <h2 id="menu-title">NOSSO <span>CARDÁPIO.</span></h2>
           </div>
-          <label class="search"
-            ><span aria-hidden="true">⌕</span
-            ><input
+          <label class="search">
+            <span aria-hidden="true">⌕</span>
+            <input
               id="search"
               type="search"
               placeholder="O que vai ser hoje?"
               aria-label="Buscar no cardápio"
-          /></label>
+            />
+          </label>
         </div>
         <nav class="categories" id="categories" aria-label="Categorias"></nav>
+        <div class="menu-meta">
+          <span>ESCOLHA SEU FAVORITO</span>
+          <span id="menu-count" role="status"></span>
+        </div>
         <div id="products" class="products">
           <p class="empty">Carregando o cardápio…</p>
         </div>
       </section>
-      <section class="how">
-        <div>
-          <span>01</span>
-          <h3>Escolha seu lanche</h3>
-          <p>Confira o cardápio e personalize.</p>
-        </div>
-        <div>
-          <span>02</span>
-          <h3>Revise sua sacola</h3>
-          <p>Escolha entrega ou retirada.</p>
-        </div>
-        <div>
-          <span>03</span>
-          <h3>Continue no WhatsApp</h3>
-          <p>Envie a mensagem e aguarde a confirmação.</p>
+      <section class="order-section" id="como-pedir" aria-labelledby="order-title">
+        <div class="wrap order-layout">
+          <div class="order-intro">
+            <p class="eyebrow">DA VONTADE AO PEDIDO</p>
+            <h2 id="order-title">
+              DO SEU JEITO.<br /><span>SEM COMPLICAÇÃO.</span>
+            </h2>
+            <p>Você escolhe por aqui.<br />A gente combina pelo WhatsApp.</p>
+            <a class="text-link" href="#menu">
+              Vamos escolher? <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <div class="how">
+            <div>
+              <span>01</span>
+              <h3>Escolha seu lanche</h3>
+              <p>Confira o cardápio e personalize.</p>
+            </div>
+            <div>
+              <span>02</span>
+              <h3>Revise sua sacola</h3>
+              <p>Escolha entrega ou retirada.</p>
+            </div>
+            <div>
+              <span>03</span>
+              <h3>Continue no WhatsApp</h3>
+              <p>Envie a mensagem e aguarde a confirmação.</p>
+            </div>
+          </div>
         </div>
       </section>
     </main>
-    <footer class="wrap">
-      <div>
-        <strong>Lanchonete Juvenil</strong>
-        <p id="address">Endereço ainda não informado.</p>
+    <div class="checker" aria-hidden="true"></div>
+    <footer class="shop-footer">
+      <div class="wrap footer-top">
+        <p class="footer-callout">BORA DE<br /><span>JUVENIL?</span></p>
+        <div class="footer-info">
+          <div>
+            <strong>Lanchonete Juvenil</strong>
+            <p id="address">Endereço ainda não informado.</p>
+          </div>
+          <div>
+            <a id="social" hidden>Instagram</a>
+            <a href="/admin">Área administrativa ↗</a>
+          </div>
+        </div>
       </div>
-      <div>
-        <a id="social" hidden>Instagram</a
-        ><a href="/admin">Área administrativa ↗</a>
+      <div class="wrap footer-bottom">
+        <span>FEITO PARA A SUA HORA DO LANCHE.</span>
+        <a href="#menu">Voltar ao cardápio ↑</a>
       </div>
     </footer>
     <button class="floating-cart" id="cart-bottom">

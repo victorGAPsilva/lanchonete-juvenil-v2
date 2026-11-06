@@ -86,7 +86,7 @@ function render() {
   ]
     .map(
       (c) =>
-        `<button data-category="${esc(c.id)}" class="${category === c.id ? "active" : ""}">${esc(c.name)}</button>`,
+        `<button data-category="${esc(c.id)}" class="${category === c.id ? "active" : ""}" aria-pressed="${category === c.id}">${esc(c.name)}</button>`,
     )
     .join("");
   renderProducts();
@@ -98,20 +98,25 @@ $("#product-carousel").addEventListener("click", (event) => {
 });
 function renderProducts() {
   const term = $("#search").value.trim().toLocaleLowerCase("pt-BR");
-  const ps = data.products.filter(
+  const availableProducts = data.products.filter((p) =>
+    data.categories.some((c) => c.id === p.categoryId),
+  );
+  const ps = availableProducts.filter(
     (p) =>
-      data.categories.some((c) => c.id === p.categoryId) &&
       (category === "all" || p.categoryId === category) &&
       `${p.name} ${p.description}`.toLocaleLowerCase("pt-BR").includes(term),
   );
+  $("#menu-count").textContent =
+    `${ps.length} ${ps.length === 1 ? "produto" : "produtos"}`;
+  const emptyCategory = category !== "all" && availableProducts.length > 0;
   $("#products").innerHTML = ps.length
     ? ps
         .map(
-          (p) =>
-            `<article class="product ${p.soldOut ? "sold" : ""}"><div class="product-copy">${p.demo ? `<span class="badge">Exemplo fictício</span> ` : ""}${p.soldOut ? '<span class="badge">Esgotado</span>' : p.promoPrice !== null ? '<span class="badge">Em promoção</span>' : p.featured ? '<span class="badge">Destaque</span>' : ""}<h3>${esc(p.name)}</h3><p>${esc(p.description)}</p><span class="price">${p.promoPrice !== null ? `<del>${money(p.price)}</del>` : ""}${money(p.promoPrice ?? p.price)}</span></div>${p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="${esc(p.name)}">` : '<div class="placeholder" aria-label="Produto sem foto">⌑</div>'}<button class="add" data-product="${esc(p.id)}" ${p.soldOut ? "disabled" : ""} aria-label="Personalizar ${esc(p.name)}">+</button></article>`,
+          (p, index) =>
+            `<article class="product ${p.soldOut ? "sold" : ""}"><span class="product-number" aria-hidden="true">${String(index + 1).padStart(2, "0")}</span><div class="product-copy">${p.demo ? `<span class="badge">Exemplo fictício</span> ` : ""}${p.soldOut ? '<span class="badge">Esgotado</span>' : p.promoPrice !== null ? '<span class="badge badge-promo">Em promoção</span>' : p.featured ? '<span class="badge">Destaque</span>' : ""}<h3>${esc(p.name)}</h3><p>${esc(p.description)}</p></div><div class="product-photo">${p.image ? `<img loading="lazy" src="${esc(p.image)}" alt="${esc(p.name)}">` : '<div class="placeholder" aria-label="Produto sem foto">⌑</div>'}</div><div class="product-order"><span class="price">${p.promoPrice !== null ? `<del>${money(p.price)}</del>` : ""}${money(p.promoPrice ?? p.price)}</span><button class="add" data-product="${esc(p.id)}" ${p.soldOut ? "disabled" : ""} aria-label="Personalizar ${esc(p.name)}">${p.soldOut ? "Esgotado" : 'Adicionar <span aria-hidden="true">↗</span>'}</button></div></article>`,
         )
         .join("")
-    : `<div class="empty"><strong>${term ? "Nenhum lanche por aqui." : "O cardápio está sendo preparado."}</strong>${term ? "Tente outro nome ou descrição." : "Em breve, os produtos estarão disponíveis neste espaço."}</div>`;
+    : `<div class="empty"><strong>${term ? "Nenhum lanche por aqui." : emptyCategory ? "Nenhum produto nesta categoria." : "O cardápio está sendo preparado."}</strong>${term ? "Tente outro nome ou descrição." : emptyCategory ? "Escolha outra categoria para conhecer os produtos disponíveis." : "Em breve, os produtos estarão disponíveis neste espaço."}</div>`;
 }
 document.addEventListener(
   "error",

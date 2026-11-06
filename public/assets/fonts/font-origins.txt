@@ -1,0 +1,16 @@
+Local fonts for the Juvenil storefront
+Downloaded 2026-11-04 from the official google/fonts repository.
+
+Anton-Regular.ttf
+Family: Anton. Style: normal. Weight: 400.
+Source: https://github.com/google/fonts/blob/main/ofl/anton/Anton-Regular.ttf
+License: SIL Open Font License 1.1, reproduced in Anton-OFL.txt.
+
+DMSans-Variable.ttf
+Family: DM Sans. Style: normal. Variable weight: 100–1000.
+Optical size axis: 9–40.
+Source: https://github.com/google/fonts/blob/main/ofl/dmsans/DMSans%5Bopsz%2Cwght%5D.ttf
+License: SIL Open Font License 1.1, reproduced in DMSans-OFL.txt.
+
+These are complete upstream TrueType files, including Portuguese accents.
+Fonts are served locally; no request to Google Fonts is required.
